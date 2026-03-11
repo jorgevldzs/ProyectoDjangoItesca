@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block encabezado %}
+<a href="{% url 'escuelas_alta' %}">
+    <img src="{% static 'images/agregar.png' %}" alt="Agregar" style="width: 30px;">
+</a>
+{% endblock %}
+{% block contenido %}
+
+<table class="w3-table-all w3-hoverable">
+    <thead>
+        <tr class="w3-dark-grey">
+            <th>Nombre</th>
+            <th>Siglas</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    {% for escuela in escuelas %}
+    <tr>
+        <td>{{ escuela.nombre }}</td>
+        <td>{{ escuela.siglas }}</td>
+        <td>
+            <a href="{% url 'escuelas_editar' escuela.id %}" style="text-decoration: none;">
+                <img src="{% static 'images/editar.png' %}" alt="Editar" style="width:30px;">
+            </a>
+            <a href="{% url 'escuelas_eliminar' escuela.id %}">
+                <img src="{% static 'images/eliminar.png' %}" alt="Eliminar" style="width:30px;">
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
