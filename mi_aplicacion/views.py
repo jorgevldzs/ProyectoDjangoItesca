@@ -111,7 +111,9 @@ class MaestroAlta(View):
         cdx = {
             "titulo" : "Alta Maestros",
             "subtitulo": "Alta Maestro",
-            "form" : form
+            "form" : form,
+            "fondo" : "bg-success p-3",
+            "boton" : "Guardar"
         }
         return render(request, 'maestros/CRUD.html', cdx)
 
@@ -129,7 +131,9 @@ class MaestroEditar(View):
         cdx = {
             "titulo" : "Editar Maestro",
             "subtitulo": "Editar Maestro",
-            "form" : form
+            "form" : form,
+            "fondo" : "bg-warning p-3",
+            "boton" : "Modificar"
         }
         return render(request, 'maestros/CRUD.html', cdx)
 
@@ -148,7 +152,9 @@ class MaestroEliminar(View):
         cdx = {
             "titulo" : "Editar Maestro",
             "subtitulo": "Baja Maestro",
-            "form" : form
+            "form" : form,
+            "fondo" : "bg-danger p-3",
+            "boton" : "Eliminar"
         }
         return render(request, 'maestros/CRUD.html', cdx)
 
