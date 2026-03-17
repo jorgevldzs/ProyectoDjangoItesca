@@ -3,7 +3,7 @@ from django.views import View
 
 from mi_aplicacion.models import Escuela, Alumno, Maestro
 
-from mi_aplicacion.forms import EscuelaForm, MaestroForm
+from mi_aplicacion.forms import EscuelaForm, MaestroForm, AlumnoForm
 
 # Create your views here.
 
@@ -166,6 +166,93 @@ class MaestroEliminar(View):
             return redirect('maestros')
         
         return redirect('home')
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Alumnos(View):
+    def get(self, request):
+        alumnos = Alumno.objects.all()
+        cdx = {
+            "titulo" : "Alumnos",
+            "subtitulo" : "Listado de alumnos",
+            "alumnos" : alumnos
+        }
+        return render(request, 'alumnos/alumnos.html', cdx)
+
+class AlumnoAlta(View):
+    def get(self, request):
+        form = AlumnoForm()
+        cdx = {
+            "titulo" : "Alta Alumnos",
+            "subtitulo": "Alta Alumnos",
+            "form" : form,
+            "fondo" : "bg-success p-3",
+            "boton" : "Guardar"
+        }
+        return render(request, 'alumnos/CRUD.html', cdx)
+
+    def post(self, request):
+        form = AlumnoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('alumnos')
+        return redirect('home')
+    
+class AlumnoEditar(View):
+    def get(self, request, id):
+        alumno = Alumno.objects.filter(id = id).first()
+        form = AlumnoForm(instance=alumno)
+        cdx = {
+            "titulo" : "Editar Alumno",
+            "subtitulo": "Editar Alumno",
+            "form" : form,
+            "fondo" : "bg-warning p-3",
+            "boton" : "Modificar"
+        }
+        return render(request, 'alumnos/CRUD.html', cdx)
+
+    def post(self, request, id):
+        alumno = Alumno.objects.filter(id = id).first()
+        form = AlumnoForm(request.POST, request.FILES, instance=alumno)
+        if form.is_valid():
+            form.save()
+            return redirect('alumnos')
+        return redirect('home')
+
+class AlumnoEliminar(View):
+    def get(self, request, id):
+        alumno = Alumno.objects.filter(id = id).first()
+        form = AlumnoForm(instance=alumno)
+        cdx = {
+            "titulo" : "Editar Alumno",
+            "subtitulo": "Baja Alumno",
+            "form" : form,
+            "fondo" : "bg-danger p-3",
+            "boton" : "Eliminar"
+        }
+        return render(request, 'alumnos/CRUD.html', cdx)
+
+    def post(self, request, id):
+        alumno = Alumno.objects.filter(id = id).first()
+        form = AlumnoForm(request.POST, request.FILES, instance=alumno)
+        if form.is_valid():
+            alumno.delete()
+            return redirect('alumnos')
+        
+        return redirect('home')
+
+
 
 
     

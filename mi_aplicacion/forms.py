@@ -3,7 +3,7 @@ from crispy_forms.helper import FormHelper
 
 from django.forms import ModelForm
 from django import forms
-from mi_aplicacion.models import Escuela, Maestro
+from mi_aplicacion.models import Escuela, Maestro, Alumno
 
 class EscuelaForm(ModelForm):
     class Meta:
@@ -45,3 +45,43 @@ class MaestroForm(ModelForm):
                 attrs={'type':'date'}
             )
         }
+
+class AlumnoForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(AlumnoForm, self).__init__(*args, **kwargs)
+        self.fields['escuela'].queryset = Escuela.objects.all()
+        self.fields['maestro'].queryset = Maestro.objects.all()
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Row(
+                Column('nombre', css_class='form-group col-md-6 mb-0'),
+                Column('escuela', css_class='form-group col-md-6 mb-0'),
+                css_class='form-row'
+            ),
+            Row(
+                Column('maestro', css_class='form-group col-md-4 mb-0'),
+                Column('sexo', css_class='form-group col-md-4 mb-0'),
+                Column('fecha_nacimiento', css_class='form-group col-md-4 mb-0'),
+                css_class='form-row'
+            ),
+            Submit('submit', '{{ boton }}', css_class='btn btn-primary')
+
+        )
+
+    class Meta:
+        model = Alumno
+        fields = ['nombre', 'escuela', 'maestro','sexo', 'fecha_nacimiento']
+        labels = {
+            'nombre' : 'Nombre Completo',
+            'escuela' : 'Escuela a la que pertenece',
+            'maestro' : 'Maestro',
+            'sexo' : 'Sexo',
+            'fecha_nacimiento' : 'Fecha de Nacimiento'
+        }
+        widgets = {
+            'fecha_nacimiento' : forms.DateInput(
+                format = '%Y-%m-%d',
+                attrs={'type':'date'}
+            )
+        }
+
