@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 HOMBRE = 2
@@ -38,3 +39,15 @@ class Alumno( models.Model):
     def __str__(self):
         cadena = f"({self.id}) {self.nombre}"
         return cadena
+    
+    def clean(self):
+        if self.maestro_id and self.escuela_id:
+            if self.maestro.escuela_id != self.escuela_id:
+                raise ValidationError(
+                    {"maestro": "El maestro debe pertenecer a la misma escuela que el alumno."}
+                )
+
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)

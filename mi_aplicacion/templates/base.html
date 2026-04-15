@@ -21,18 +21,32 @@
     </div>
 
     <div id="main">
-        <div class="w3-teal">
-            <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">
-                &#9776;
-            </button>
-            <div class="w3-container">
-                <h1>
-                    {{ subtitulo }}
-                    {% block encabezado %}
-                    {% endblock %}
-                </h1>
+        <div class="w3-teal w3-row">
+            <div class="w3-third">
+                <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">
+                    &#9776;
+                </button>
+                <div class="w3-container">
+                    <h2>
+                        {{ subtitulo }}
+                        {% block encabezado %}
+                        {% endblock %}
+                    </h2>
+                    
+                </div>
+            </div>
+            
+
+            <div class="w3-third">
+                filtros
                 
             </div>
+
+            <div class="w3-third">
+                {{ user.username }}
+                
+            </div>
+
         </div>
 
         <div class="w3-container">
