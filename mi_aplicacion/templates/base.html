@@ -16,13 +16,15 @@
             Cerrar &times;
         </button>
         <a href="/escuelas/" class="w3-bar-item w3-button">Escuelas</a>
+        {% if user.is_authenticated and perms.mi_aplicacion.view_maestro %}
         <a href="/maestros/" class="w3-bar-item w3-button">Maestros</a>
+        {% endif %}
         <a href="/alumnos/" class="w3-bar-item w3-button">Alumnos</a>
     </div>
 
     <div id="main">
         <div class="w3-teal w3-row">
-            <div class="w3-third">
+            <div class="w3-third w3-container">
                 <button id="openNav" class="w3-button w3-teal w3-xlarge" onclick="w3_open()">
                     &#9776;
                 </button>
@@ -37,12 +39,20 @@
             </div>
             
 
-            <div class="w3-third">
-                filtros
+            <div class="w3-third w3-container">
+                {% block filtros %}
+                {% endblock %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
                 
             </div>
 
-            <div class="w3-third">
+            <div class="w3-third w3-container">
                 {{ user.username }}
                 
             </div>

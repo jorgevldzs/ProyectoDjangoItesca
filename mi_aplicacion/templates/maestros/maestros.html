@@ -3,11 +3,49 @@
 {% load static %}
 
 {% block encabezado %}
-<a href="{% url 'maestros_alta' %}">
-    <img src="{% static 'images/agregar.png' %}" alt="Agregar" style="width: 30px;">
-</a>
+
+
+    {% if user.is_authenticated and perms.mi_aplicacion.add_maestro %}
+        <a href="{% url 'maestros_alta' %}">
+            <img src="{% static 'images/agregar.png' %}" alt="Agregar" style="width: 30px;">
+        </a>    
+    {% endif %}
 {% endblock %}
 {% block contenido %}
+
+{% block filtros %}
+    <form method="post" class="w3-container w3-light-grey w3-padding-16 w3-margin-bottom">
+        {% csrf_token %}
+        <div class="w3-row-padding">
+            <div class="w3-third">
+                <label>Nombre del Maestro</label>
+                <input type="text" name="nombre" class="w3-input w3-border" 
+                       value="{{ request.GET.nombre }}" placeholder="Buscar por nombre...">
+            </div>
+
+            <div class="w3-third">
+                <label>Escuela</label>
+                <select name="escuela" class="w3-select w3-border">
+                    <option value="">Todas las escuelas</option>
+                    {% for escuela in escuelas %}
+                        <option value="{{ escuela.id }}" 
+                            {% if request.GET.escuela == escuela.id|stringformat:"i" %}selected{% endif %}>
+                            {{ escuela.siglas }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="w3-third">
+                <label>&nbsp;</label>
+                <div class="w3-block">
+                    <button type="submit" class="w3-button w3-blue">Filtrar</button>
+                    <a href="{% url 'maestros' %}" class="w3-button w3-red">Limpiar</a>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
 
 <table class="w3-table-all w3-hoverable">
     <thead>
@@ -16,7 +54,10 @@
             <th>Escuela</th>
             <th>Sexo</th>
             <th>Fecha de Nacimiento</th>
-            <th>Acciones</th>
+            
+            {% if perms.mi_aplicacion.edit_maestro or perms.mi_aplicacion.delete_maestro %}
+                <th>Acciones</th>
+            {% endif %}
         </tr>
     </thead>
     {% for maestro in maestros %}
@@ -31,14 +72,23 @@
         <td>Otro</td>
         {% endif %}
         <td>{{ maestro.fecha_nacimiento }}</td>
-        <td>
-            <a href="{% url 'maestros_editar' maestro.id %}" style="text-decoration: none;">
-                <img src="{% static 'images/editar.png' %}" alt="Editar" style="width:30px;">
-            </a>
-            <a href="{% url 'maestros_eliminar' maestro.id %}">
-                <img src="{% static 'images/eliminar.png' %}" alt="Eliminar" style="width:30px;">
-            </a>
-        </td>
+        {% if perms.mi_aplicacion.edit_maestro or perms.mi_aplicacion.delete_maestro %}
+            <td>
+                {% if user.is_authenticated and perms.mi_aplicacion.edit_maestro %}
+                    <a href="{% url 'maestros_editar' maestro.id %}" style="text-decoration: none;">
+                        <img src="{% static 'images/editar.png' %}" alt="Editar" style="width:30px;">
+                    </a>
+                {% endif %}
+                {% if user.is_authenticated and perms.mi_aplicacion.delete_maestro %}
+                    <a href="{% url 'maestros_eliminar' maestro.id %}">
+                        <img src="{% static 'images/eliminar.png' %}" alt="Eliminar" style="width:30px;">
+                    </a>
+                {% endif %}
+                
+                
+            </td>
+        {% endif %}
+        
     </tr>
 
     {% endfor %}

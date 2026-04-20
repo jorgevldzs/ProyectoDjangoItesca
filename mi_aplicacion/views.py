@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib import messages
 
 from mi_aplicacion.models import Escuela, Alumno, Maestro
 
@@ -97,16 +98,25 @@ class EscuelaEliminar(View):
 
 class Maestros(View):
     def get(self, request):
+        if not request.user.has_perm('mi_aplicacion.view_maestro'):
+            messages.error(request, f"{request.user.username} No tienes permiso para ver la página de maestros.")
+            return redirect('home')
+        
         maestros = Maestro.objects.all()
         cdx = {
             "titulo" : "Maestros",
             "subtitulo" : "Listado de maestros",
-            "maestros" : maestros
+            "maestros" : maestros,
+            "escuelas" : Escuela.objects.all()
         }
         return render(request, 'maestros/maestros.html', cdx)
 
 class MaestroAlta(View):
     def get(self, request):
+        if not request.user.has_perm('mi_aplicacion.add_maestro'):
+            messages.error(request, f"{request.user.username} No tienes permiso para agregar maestros.")
+            return redirect('home')
+        
         form = MaestroForm()
         cdx = {
             "titulo" : "Alta Maestros",
@@ -126,6 +136,10 @@ class MaestroAlta(View):
     
 class MaestroEditar(View):
     def get(self, request, id):
+        if not request.user.has_perm('mi_aplicacion.edit_maestro'):
+            messages.error(request, f"{request.user.username} No tienes permiso para editar maestros.")
+            return redirect('home')
+
         maestro = Maestro.objects.filter(id = id).first()
         form = MaestroForm(instance=maestro)
         cdx = {
@@ -147,6 +161,10 @@ class MaestroEditar(View):
 
 class MaestroEliminar(View):
     def get(self, request, id):
+        if not request.user.has_perm('mi_aplicacion.add_maestro'):
+            messages.error(request, f"{request.delete.username} No tienes permiso para eliminar maestros.")
+            return redirect('home')
+
         maestro = Maestro.objects.filter(id = id).first()
         form = MaestroForm(instance=maestro)
         cdx = {
