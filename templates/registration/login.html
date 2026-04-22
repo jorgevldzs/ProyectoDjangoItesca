@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block encabezado %}
+    Iniciar sesión
+{% endblock %}
+
+{% block contenido %}
+    <h2>Iniciar sesión</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Iniciar sesión</button>
+    </form>
+{% endblock %}

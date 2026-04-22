@@ -53,7 +53,20 @@
             </div>
 
             <div class="w3-third w3-container">
-                {{ user.username }}
+                {% if user.is_authenticated %}
+                    {{ user.username }}
+                    <form action="/accounts/logout/" method="post">
+                        {% csrf_token %}
+                        <button type="submit">
+                            <img src="/static/images/logout.png" alt="Cerrar sesión">
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="/accounts/login/" class="w3-button w3-teal">
+                        <img src="/static/images/login.png" alt="Iniciar sesión">
+                    </a>
+                {% endif %}
+                
                 
             </div>
 
